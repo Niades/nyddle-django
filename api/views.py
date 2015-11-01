@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.core import serializers
 from django.utils import timezone
 from django.utils.html import strip_tags, escape
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 import json
@@ -35,7 +34,6 @@ def post_news(request):
         return HttpResponse(status=403)
 
 
-@csrf_exempt
 def post_login(request):
     if request.method == 'POST':
         json_data = json.loads(request.body)
