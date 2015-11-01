@@ -1,5 +1,9 @@
 from django.http import HttpResponse
 from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+import json
 from .models import NewsItem
 
 
@@ -10,5 +14,23 @@ def get_news(request):
             serializers.serialize('json', news),
             content_type='application/json'
         )
+    else:
+        return HttpResponse(status=405)
+
+
+@csrf_exempt
+def post_login(request):
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        user = authenticate(
+            username=json_data['username'],
+            password=json_data['password']
+        )
+        if user is not None:
+            login(request, user)
+            return HttpResponse()
+        else:
+            # Authentication failed - Forbidden
+            return HttpResponse(status=403)
     else:
         return HttpResponse(status=405)
