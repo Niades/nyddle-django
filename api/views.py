@@ -28,6 +28,7 @@ def post_news(request):
             new.body = escape(strip_tags(json_data['body']))
             new.pub_date = timezone.now()
             new.save()
+            return HttpResponse(status=200)
         else:
             return HttpResponse(status=405)
     else:
